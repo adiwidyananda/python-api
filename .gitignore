@@ -1,0 +1,18 @@
+# Python-specific files
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+venv/
+fastapi-env/
+
+# Environment variables
+.env
+
+# OS-specific files
+.DS_Store
