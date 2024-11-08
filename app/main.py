@@ -1,7 +1,16 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from . import models, schemas, crud
 from .database import engine, Base, get_db
+import google.generativeai as genai
+
+load_dotenv()
+
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+
+genai.configure(api_key=GOOGLE_API_KEY)
 
 # Initialize the app
 app = FastAPI()
@@ -37,3 +46,15 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+
+@app.post("/chat")
+def chat(text: str):
+    # Initialize the Gemini AI model
+    model = genai.GenerativeModel(model_name='gemini-1.5-flash')
+    
+    # Generate content based on the input text
+    response = model.generate_content(text)
+    
+    # Return the response text from Gemini AI
+    return response.text
